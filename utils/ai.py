@@ -10,13 +10,16 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 async def generate_questions(topic: str):
     try:
-        response = openai.ChatCompletion.acreate(
+        # Await the coroutine correctly
+        response = await openai.ChatCompletion.acreate(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a quiz question generator."},
                 {"role": "user", "content": f"Generate 5 multiple-choice questions on the topic: {topic}."},
             ],
         )
-        return response.choices[0].message.content
+        # Access the response content properly
+        return response.choices[0].message["content"]
     except Exception as e:
+        # Handle exceptions and return error messages
         return {"error": str(e)}

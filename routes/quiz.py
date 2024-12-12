@@ -39,8 +39,13 @@ async def start_quiz(request: StartQuizRequest):
 
 @quiz_router.post("/generate-questions")
 async def generate_questions_route(request: QuestionRequest):
-    questions = await generate_questions(request.topic)
-    return {"questions": questions}
+    try:
+        # Await the generate_questions function
+        questions = await generate_questions(request.topic)
+        return {"questions": questions}
+    except Exception as e:
+        return {"error": str(e)}
+
 
 @quiz_router.post("/join-room")
 async def join_room(request: JoinRoomRequest):
