@@ -7,7 +7,7 @@ from websocket.quiz_ws import websocket_handler
 app = FastAPI()
 
 # Initialize Socket.IO
-socket_manager = SocketManager(app)
+socket_manager = SocketManager(app, cors_allowed_origins=["*"])  # Allow connections from any origin
 websocket_handler.init_socket_manager(socket_manager)
 
 # Include API routes
