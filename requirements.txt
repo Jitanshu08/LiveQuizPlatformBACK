@@ -4,4 +4,4 @@ fastapi-socketio
 python-socketio
 openai
 python-dotenv
- python-multipart
+python-multipart
