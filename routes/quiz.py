@@ -8,11 +8,15 @@ class QuestionRequest(BaseModel):
 
 class StartQuizRequest(BaseModel):
     room: str
+    questions: list
 
 quiz_router = APIRouter()
 
 @quiz_router.post("/start")
-async def start_quiz(room: str, questions: list):
+async def start_quiz(request: StartQuizRequest):
+    room = request.room
+    questions = request.questions
+    
     if room in websocket_handler.quiz_states:
         return {"error": "Quiz already started in this room."}
     
