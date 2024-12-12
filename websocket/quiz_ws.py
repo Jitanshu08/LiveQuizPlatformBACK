@@ -103,6 +103,7 @@ class QuizWebSocket:
                 for sid, data in self.quiz_states[room]["participants"].items()
             ]
             leaderboard = sorted(leaderboard, key=lambda x: x["score"], reverse=True)
+            print(f"Broadcasting leaderboard to room {room}: {leaderboard}")  # Debug log
             await self.socket_manager.emit("leaderboard", {"leaderboard": leaderboard}, room=room)
 
 # Create an instance of QuizWebSocket
