@@ -74,12 +74,26 @@ class QuizWebSocket:
 
 
     async def submit_answer(self, room: str, sid: str, answer: str):
-        if room in self.quiz_states and sid in self.quiz_states[room]["participants"]:
+        if room in self.quiz_states:
+            quiz_state = self.quiz_states[room]
+            if quiz_state["current_question"] is None:
+                await self.socket_manager.emit(
+                    "error", {"message": "No active question in the room."}, room=sid
+                )
+                return
+
             # Logic to check correctness of answer and update score
-            participant = self.quiz_states[room]["participants"][sid]
-            correct_answer = self.quiz_states[room]["current_question"]["answer"]
+            participant = quiz_state["participants"].get(sid)
+            if participant is None:
+                await self.socket_manager.emit(
+                    "error", {"message": "Participant not found."}, room=sid
+                )
+                return
+
+            correct_answer = quiz_state["current_question"]["answer"]
             if answer == correct_answer:
                 participant["score"] += 10
+
             await self.broadcast_leaderboard(room)
 
     async def broadcast_leaderboard(self, room: str):
